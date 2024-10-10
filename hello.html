@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web Server Commands Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+        }
+        pre {
+            background-color: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .command {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Web Server Commands Guide</h1>
+    <p>You can test the server with the following curl commands:</p>
+
+    <h2>Upload a file:</h2>
+    <pre><span class="command">curl -X POST --data-binary @myfile.wav http://localhost:7878/files</span></pre>
+
+    <h2>List all files:</h2>
+    <pre><span class="command">curl http://localhost:7878/files</span></pre>
+
+    <h2>List files with filter:</h2>
+    <pre><span class="command">curl "http://localhost:7878/files?wav"</span></pre>
+
+    <h2>Get file content:</h2>
+    <pre><span class="command">curl http://localhost:7878/content/filename.wav > downloaded_file.wav</span></pre>
+
+    <h2>Get file metadata:</h2>
+    <pre><span class="command">curl http://localhost:7878/metadata/filename.wav</span></pre>
+
+    <h2>Get all WAV files with a maximum duration of 300 seconds:</h2>
+    <pre><span class="command">curl "http://localhost:7878/files?maxduration=300"</span></pre>
+
+    <h2>Get all WAV files with "tone" in the filename and a maximum duration of 180 seconds:</h2>
+    <pre><span class="command">curl "http://localhost:7878/files?filter=tone&maxduration=180"</span></pre>
+
+    <h2>Additional Commands:</h2>
+    <pre><span class="command">curl "http://localhost:7878/files?filter=wav"</span></pre>
+</body>
