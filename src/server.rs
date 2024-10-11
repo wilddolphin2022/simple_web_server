@@ -6,6 +6,8 @@ use serde_json::json;
 use hound;
 use regex::Regex;
 use url::Url;
+use mp3_duration;
+
 
 #[derive(Serialize, Deserialize)]
 struct FileMetadata {
@@ -89,10 +91,16 @@ async fn handle_file_list(stream: &mut (impl AsyncReadExt + AsyncWriteExt + Unpi
     let parsed_url = Url::parse(&format!("http://dummy.com?{}", query))?;
     let query_pairs: Vec<(String, String)> = parsed_url.query_pairs().into_owned().collect();
 
-    let filter = query_pairs.iter().find(|(key, _)| key == "filter").map(|(_, value)| value.to_string());
+    let mut filter = query_pairs.iter().find(|(key, _)| key == "filter").map(|(_, value)| value.to_string());
+    if filter == None && Some(query).is_some() {
+        filter = Some(query.to_owned());
+    }
+
     let max_duration: Option<f32> = query_pairs.iter()
         .find(|(key, _)| key == "maxduration")
         .and_then(|(_, value)| value.parse().ok());
+
+    // println!("handle_file_list:: parsed_url: {:?}, filter {:?}, max_duration {:?}", parsed_url, filter, max_duration);
 
     let mut entries = Vec::new();
     let mut dir = read_dir("files").await?;
@@ -177,12 +185,32 @@ async fn handle_file_metadata(stream: &mut (impl AsyncReadExt + AsyncWriteExt + 
 }
 
 async fn get_audio_duration(path: &PathBuf) -> Option<f32> {
+    if let Some(extension) = path.extension() {
+        match extension.to_str() {
+            Some("wav") => get_wav_duration(path),
+            Some("mp3") => get_mp3_duration(path),
+            _ => None,
+        }
+    } else {
+        None
+    }
+}
+
+fn get_wav_duration(path: &PathBuf) -> Option<f32> {
     if let Ok(reader) = hound::WavReader::open(path) {
         let spec = reader.spec();
         let duration = reader.duration() as f32 / spec.sample_rate as f32;
         Some(duration)
     } else {
         None
+    }
+}
+
+fn get_mp3_duration(path: &PathBuf) -> Option<f32> {
+    // println!("get_mp3_duration:: mp3 path {:?}, duration {:?}", path, mp3_duration::from_path(path));
+    match mp3_duration::from_path(path) {
+        Ok(duration) => Some(duration.as_secs_f32()),
+        Err(_) => None,
     }
 }
 

@@ -22,6 +22,7 @@ hound = "3.4"
 regex = "1.5"
 chrono = "0.4"
 url = "2.2"
+mp3-duration = "0.1.10"
 
 [dependencies.async-std]
 version = "1.6"
