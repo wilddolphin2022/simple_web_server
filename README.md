@@ -1,6 +1,6 @@
-# Rust Simple Web Server
+# Simple Web Server
 
-Learn Rust with example
+Learn Rust with this example
 
 ## Using
 
