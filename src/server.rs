@@ -26,8 +26,7 @@ pub async fn handle_connection(mut stream: impl AsyncReadExt + AsyncWriteExt + U
     } else if request_line.starts_with("GET /files") {
         // clean up request line from stray code
         if request_line.contains(" HTTP/1.1") {
-            let lines : Vec<&str> = request_line.split(" HTTP/1.1").collect();
-            request_line = lines[0];
+            request_line = request_line.split(" HTTP/1.1").nth(0).unwrap_or(request_line)
         }
 
         handle_file_list(&mut stream, request_line).await?;
