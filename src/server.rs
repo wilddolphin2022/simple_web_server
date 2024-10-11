@@ -42,8 +42,12 @@ pub async fn handle_connection(mut stream: impl AsyncReadExt + AsyncWriteExt + U
         stream.write_all(response.as_bytes()).await?;
         stream.write_all(&content).await?;
     } else {
-        let response = "HTTP/1.1 404 NOT FOUND\r\n\r\nNot Found";
+        let content = tokio::fs::read(&"404.html").await?;
+        let response = format!(
+            "HTTP/1.1 404 NOT FOUND\r\nContent-Type: text/html\r\n\r\n"
+        );
         stream.write_all(response.as_bytes()).await?;
+        stream.write_all(&content).await?;
     }
 
     stream.flush().await?;
