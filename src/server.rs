@@ -72,6 +72,10 @@ async fn handle_file_upload(stream: &mut (impl AsyncReadExt + AsyncWriteExt + Un
                 break;
             }
             file.write_all(&buffer[..bytes_read]).await?;
+
+            if bytes_read < 1024 {
+                break;
+            }
         }
 
         let response = format!(
