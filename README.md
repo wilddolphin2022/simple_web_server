@@ -30,5 +30,5 @@ Rust by Example is licensed under either of
 at your option.
 
 Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in Rust by Example by you, as defined in the Apache-2.0 license, shall be
+for inclusion in Simple Web Server by you, as defined in the Apache-2.0 license, shall be
 dually licensed as above, without any additional terms or conditions.
